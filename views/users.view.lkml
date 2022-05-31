@@ -98,6 +98,18 @@ view: users {
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;
+    map_layer_name: us_states
+  }
+
+  dimension: state_link {
+    type: string
+    sql: ${TABLE}.state ;;
+    map_layer_name: us_states
+    html: {% if _explore._name == "order_items" %}
+          <a href="/explore/mandatory_cmu/order_items?fields=order_items.detail*&f[users.state]= {{ value }}">{{ value }}</a>
+        {% else %}
+          <a href="/explore/mandatory_cmu/users?fields=users.detail*&f[users.state]={{ value }}">{{ value }}</a>
+        {% endif %} ;;
   }
 
   dimension: traffic_source {
