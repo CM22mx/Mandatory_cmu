@@ -7,6 +7,18 @@ view: users {
   # This primary key is the unique key for this table in the underlying database.
   # You need to define a primary key in a view in order to join to other views.
 
+  filter: select_traffic_source {
+    type: string
+    suggest_explore: order_items
+    suggest_dimension: users.traffic_source
+  }
+
+  dimension: hidden_traffic_source_filter {
+    hidden: yes
+    type:  yesno
+    sql: {%condition select_traffic_source%} ${traffic_source} {%endcondition%} ;;
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -126,6 +138,12 @@ view: users {
     label: "Order History"
     sql: ${TABLE}.id ;;
     html: <a href="/explore/mandatory_cmu/order_items?fields=order_items.order_item_id, users.first_name, users.last_name, users.id, order_items.order_item_count, order_items.total_revenue&f[users.id]={{ value }}"><button>Order History</button></a> ;;
+  }
+
+  measure: dynamic_count {
+    type: count_distinct
+    sql: ${id} ;;
+    filters: [ hidden_traffic_source_filter: "Yes" ]
   }
 
   measure: count {
