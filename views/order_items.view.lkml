@@ -7,6 +7,36 @@ view: order_items {
   # This primary key is the unique key for this table in the underlying database.
   # You need to define a primary key in a view in order to join to other views.
 
+  parameter: select_timeframe {
+    type: unquoted
+    default_value: "created_month"
+    allowed_value: {
+      value: "created_date"
+      label: "Date"
+    }
+    allowed_value: {
+      value: "created_week"
+      label: "Week"
+    }
+    allowed_value: {
+      value: "created_month"
+      label: "Month"
+    }
+  }
+
+  dimension: dynamic_timeframe {
+    label_from_parameter: select_timeframe
+    type: string
+    sql:
+    {% if select_timeframe._parameter_value == 'created_date' %}
+    ${created_date}
+    {% elsif select_timeframe._parameter_value == 'created_week' %}
+    ${created_week}
+    {% else %}
+    ${created_month}
+    {% endif %} ;;
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -50,6 +80,21 @@ view: order_items {
     type: number
     sql: ${TABLE}.sale_price ;;
   }
+
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.returned_at ;;
+  }
+
 
   # A measure is a field that uses a SQL aggregate function. Here are defined sum and average
   # measures for this dimension, but you can also add measures of many different aggregates.
