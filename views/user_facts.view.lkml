@@ -1,6 +1,6 @@
 view: user_facts {
   derived_table: {
-    sql: SELECT users.id AS users_id
+    sql: SELECT users.id AS user_id
           ,COUNT(distinct order_items.order_id) AS lifetime_order_count
           ,SUM(order_items.sale_price) AS lifetime_revenue
           ,MIN(order_items.returned_at) AS first_order_date
@@ -19,10 +19,10 @@ view: user_facts {
     drill_fields: [detail*]
   }
 
-  dimension: users_id {
+  dimension: user_id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.users_id ;;
+    sql: ${TABLE}.user_id ;;
   }
 
   dimension: lifetime_order_count {
@@ -45,7 +45,17 @@ view: user_facts {
     sql: ${TABLE}.latest_order_date ;;
   }
 
+  measure: average_lifetime_revenue {
+    type: average
+    sql: ${TABLE}.lifetime_revenue ;;
+  }
+
+  measure: average_lifetime_order_count {
+    type: average
+    sql: ${TABLE}.lifetime_order_count ;;
+  }
+
   set: detail {
-    fields: [users_id, lifetime_order_count, lifetime_revenue, first_order_date_time, latest_order_date_time]
+    fields: [user_id, lifetime_order_count, lifetime_revenue, first_order_date_time, latest_order_date_time]
   }
 }
