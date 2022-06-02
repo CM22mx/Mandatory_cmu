@@ -9,8 +9,14 @@ view: user_facts {
           public.order_items AS order_items
           LEFT JOIN public.orders AS orders ON order_items.order_id = orders.id
           LEFT JOIN public.users AS users ON orders.user_id = users.id
+      WHERE {% condition select_date %} order_items.returned_at {% endcondition %}
       GROUP BY users.id
        ;;
+  }
+  filter: select_date {
+    type: date
+    suggest_explore: order_items
+    suggest_dimension: order_items.created_date
   }
 
   measure: count {
