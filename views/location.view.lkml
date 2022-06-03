@@ -19,13 +19,13 @@ view: location {
     sql: ${TABLE}.country ;;
   }
 
-  dimension: latitude {
-    type: number
-    sql: ${TABLE}.latitude ;;
-  }
+ # dimension: latitude {
+#    type: number
+ #   sql: ${TABLE}.latitude ;;
+  #}
 
-  dimension: longitude {
-    type: number
-    sql: ${TABLE}.longitude ;;
-  }
+  #dimension: longitude {
+  #  type: number
+  #  sql: ${TABLE}.longitude ;;
+  #}
 }
