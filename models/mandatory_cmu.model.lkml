@@ -67,6 +67,7 @@ explore: order_items {
   }
 }
 
+
 explore: orders {
   join: users {
     type: left_outer
